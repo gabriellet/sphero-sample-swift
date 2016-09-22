@@ -62,10 +62,10 @@ class ViewController: UIViewController {
                 self.robot = RKConvenienceRobot(robot: noteRobot);
                 
                 connectionLabel.text = noteRobot.name()
-                // togleLED()
-                driveForward()
-                driveBackward()
                 togleLED()
+                driveForward()
+                //driveBackward()
+                //togleLED()
                 
             }
             break
@@ -96,7 +96,8 @@ class ViewController: UIViewController {
             
             let delay = Int64(0.5 * Float(NSEC_PER_SEC))
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
-                robot.sendCommand(RKRollCommand(heading: 0.0, velocity: 0.0))
+                self.driveBackward()
+                self.toggleRed()
             })
         }
     }
@@ -124,7 +125,23 @@ class ViewController: UIViewController {
             
             let delay = Int64(0.5 * Float(NSEC_PER_SEC))
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
-                self.togleLED();
+                self.togleLED()
+            })
+        }
+    }
+    
+    func toggleRed() {
+        if let robot = self.robot {
+            if (ledON) {
+                robot.setLEDWithRed(0.0, green: 0.0, blue: 0.0)
+            } else {
+                robot.setLEDWithRed(0.8, green: 0.0, blue: 0.0)
+            }
+            ledON = !ledON
+            
+            let delay = Int64(0.5 * Float(NSEC_PER_SEC))
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
+                self.togleLED()
             })
         }
     }
